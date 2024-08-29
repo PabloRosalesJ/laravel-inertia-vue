@@ -18,4 +18,14 @@ class OrderDetail extends Model
     protected $fillable = [
         'order_id', 'product_id', 'quantity', 'unit_price'
     ];
+
+    public function product() {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function updateProductQuantity(int $newQuantity) {
+        $this->update([
+            'quantity' => $newQuantity
+        ]);
+    }
 }

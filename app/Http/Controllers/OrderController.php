@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Product;
 use App\services\Order\OrdersFinder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -33,9 +34,17 @@ class OrderController extends Controller
         //
     }
 
-    public function show(Order $order)
+    public function show($order)
     {
-        return Inertia::render("Order/views/Show", compact('order'));
+        $order = $this->finder->getById($order);
+        $products = Product::select('id', 'name', 'price')->orderBy('name')->get();
+        return Inertia::render("Order/views/Show", compact('order', 'products'));
+    }
+
+    public function showById($order)
+    {
+        $order = $this->finder->getById($order);
+        return $this->success(compact('order'));
     }
 
     public function edit(Order $order)

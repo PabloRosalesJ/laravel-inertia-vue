@@ -1,6 +1,7 @@
 import axios from "axios"
 
 const ordersBackend = page => `/orders${page}`
+const detailBackend = page => `/orders-detail${page}`
 
 const requestPage = async (page) => {
     const {
@@ -14,7 +15,29 @@ const deleteOrder = async (order) => {
     await axios.delete(ordersBackend(`/${order}`));
 }
 
+const requestOrderDetail = async (order) => {
+    const { data: { data } } = await axios.get(ordersBackend(`/${order}/show`));
+
+    return data;
+}
+
+const updateProduct = async (orderDetail, newQuantity) => {
+    await axios.put(detailBackend(`/${orderDetail}`), { newQuantity })
+}
+
+const removeProduct = async (orderDetail) => {
+    await axios.delete(detailBackend(`/${orderDetail}`));
+}
+
+const addProduct = async (order, product) => {
+    await axios.post(detailBackend(``), { order, product });
+}
+
 export {
     requestPage,
-    deleteOrder
+    deleteOrder,
+    requestOrderDetail,
+    updateProduct,
+    removeProduct,
+    addProduct
 }

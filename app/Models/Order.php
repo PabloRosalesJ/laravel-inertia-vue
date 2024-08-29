@@ -38,6 +38,23 @@ class Order extends Model
         return $this->hasMany(OrderDetail::class);
     }
 
+    public function addProduct(int $product) {
+
+        $product = Product::find($product);
+
+        if ($this->details()->where('product_id', $product->id)->exists()) {
+            $det = $this->details()->where('product_id', $product->id)->first();
+            $det->increment('quantity');
+            return $det;
+        }
+
+        return $this->details()->create([
+            'product_id' => $product->id,
+            'quantity' => 1,
+            'unit_price' => $product->price,
+        ]);
+    }
+
     public static function getNewNumber() {
         return Str::upper(Str::random(10));
     }

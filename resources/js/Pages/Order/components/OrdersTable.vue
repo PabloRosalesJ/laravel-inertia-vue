@@ -112,10 +112,10 @@ const showDetails = (order) => {
                                         </div>
                                     </td>
                                     <td class="px-4 py-4 text-sm font-medium text-gray-800 dark:text-white">
-                                        {{ o.details_count }} pz
+                                        {{ o.details_count }} prod.
                                     </td>
                                     <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                                        {{ currency(o.details_sum_unit_price) }}
+                                        {{ currency(o.total_amount) }}
                                     </td>
                                     <td class="px-4 py-4 text-sm whitespace-nowrap">
                                         <div class="flex items-center justify-center gap-3">
