@@ -20,6 +20,24 @@ class Order extends Model
         'client_id', 'number'
     ];
 
+    protected $hidden = [
+        'updated_at', 'deleted_at'
+    ];
+
+    protected function casts(): array {
+        return [
+            'created_at' => 'datetime:Y-m-d',
+        ];
+    }
+
+    public function client() {
+        return $this->belongsTo(Client::class);
+    }
+
+    public function details() {
+        return $this->hasMany(OrderDetail::class);
+    }
+
     public static function getNewNumber() {
         return Str::upper(Str::random(10));
     }
