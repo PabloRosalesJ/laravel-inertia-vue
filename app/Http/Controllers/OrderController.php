@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Order\CreateRequest;
 use App\Models\Client;
 use App\Models\Order;
 use App\Models\Product;
@@ -32,11 +33,11 @@ class OrderController extends Controller
         return Inertia::render("Order/views/New", compact('clients', 'products'));
     }
 
-    public function store(Request $request)
+    public function store(CreateRequest $request)
     {
         Order::newOrder(
-            $request->client,
-            $request->productsList,
+            $request->validated('client'),
+            $request->validated('productsList'),
         );
 
         return to_route('dashboard');
