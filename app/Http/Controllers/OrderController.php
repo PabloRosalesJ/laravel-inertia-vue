@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Order;
 use App\Models\Product;
 use App\services\Order\OrdersFinder;
@@ -26,12 +27,19 @@ class OrderController extends Controller
 
     public function create()
     {
-        //
+        $clients = Client::select('id', 'name')->orderBy('name')->get();
+        $products = Product::select('id', 'name', 'price')->orderBy('name')->get();
+        return Inertia::render("Order/views/New", compact('clients', 'products'));
     }
 
     public function store(Request $request)
     {
-        //
+        Order::newOrder(
+            $request->client,
+            $request->productsList,
+        );
+
+        return to_route('dashboard');
     }
 
     public function show($order)

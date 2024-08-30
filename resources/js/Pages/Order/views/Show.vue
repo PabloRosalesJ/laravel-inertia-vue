@@ -19,7 +19,7 @@ onMounted(() => {
     productsList.value = props.order.details;
 })
 
-watch(productsList, (v, nv) => {
+watch(productsList, (v, ov) => {
 
     piecesCount.value = productsList.value.reduce(
         (ac, val) => ac + val.quantity, 0

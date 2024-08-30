@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 /**
@@ -36,6 +38,34 @@ class Order extends Model
 
     public function details() {
         return $this->hasMany(OrderDetail::class);
+    }
+
+    public static function newOrder(int $client, array $products) {
+        try {
+            DB::beginTransaction();
+
+            $order = self::create([
+                'client_id' => $client,
+                'number' => self::getNewNumber()
+            ]);
+
+            $prices = Product::whereIn('id', collect($products)->select('product'))->select('id', 'price')->get();
+
+            $details = array_map(fn($p) => new OrderDetail([
+                'product_id' => $p['product'],
+                'quantity' => $p['quantity'],
+                'unit_price' => $prices->where('id', $p['product'])->first()->price,
+            ]), $products);
+
+            $order->details()->saveMany($details);
+
+            DB::commit();
+
+            return $order;
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            DB::rollBack();
+        }
     }
 
     public function addProduct(int $product) {

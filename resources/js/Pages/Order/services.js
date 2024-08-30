@@ -33,11 +33,21 @@ const addProduct = async (order, product) => {
     await axios.post(detailBackend(``), { order, product });
 }
 
+const storeOrder = async (form) => {
+    const { data } = await axios.post(
+        ordersBackend(''),
+        form
+    );
+
+    return data;
+}
+
 export {
     requestPage,
     deleteOrder,
     requestOrderDetail,
     updateProduct,
     removeProduct,
-    addProduct
+    addProduct,
+    storeOrder
 }
